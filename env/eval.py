@@ -24,7 +24,7 @@ class Evaluator:
         """
  
         self.env = auxiliary_make_env(args, eval_env=True)[0]  # Initialize synchronized vector environment
-        self.max_steps = self.env.init_env.chronics_handler.max_episode_duration()  # Get max episode duration
+        self.max_steps = self.env.unwrapped.init_env.chronics_handler.max_episode_duration()  # Get max episode duration
 
         self.logger = logger  # Logger for evaluation metrics
         self.device = device  # Device for model inference
@@ -63,7 +63,7 @@ class Evaluator:
             ep_rewards += list(info['rewards'].values())
             # Record rewards for plotting purposes
             if "episode" in info:   # Denote end of an episode
-                ep_survivals.append(self.env.init_env.nb_time_step/self.max_steps)
+                ep_survivals.append(self.env.unwrapped.init_env.nb_time_step/self.max_steps)
                 ep_returns.append(ep_rewards)
                 obs, _ = self.env.reset()
                 ep_rewards = np.zeros(len(self.reward_tags))
@@ -119,7 +119,7 @@ class CMDPEvaluator(Evaluator):
 
             # Record rewards and cost for plotting purposes
             if "episode" in info:   # Denote end of an episode
-                ep_survivals.append(self.env.init_env.nb_time_step/self.max_steps)
+                ep_survivals.append(self.env.unwrapped.init_env.nb_time_step/self.max_steps)
                 ep_returns.append(ep_rewards)
                 ep_cost_returns.append(ep_costs)
 

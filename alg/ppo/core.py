@@ -97,10 +97,12 @@ class PPO:
                     terminations[step] = th.tensor(next_terminations).to(device)
 
                     real_next_obs = next_obs.copy()
-                    for idx, done in enumerate(dones[step]):
-                        if done: 
-                            real_next_obs[idx] = infos["final_observation"][idx]
-                            
+                    if "final_observation" in infos:
+                        for idx, done in enumerate(dones[step]):
+                            if done:
+                                real_next_obs[idx] = infos["final_observation"][idx]
+
+
                     next_obs = th.tensor(next_obs).to(device)
                     real_next_obs = th.tensor(real_next_obs).to(device)
 

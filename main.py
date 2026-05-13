@@ -41,7 +41,7 @@ def main(args: Namespace) -> None:
         raise ValueError("Check the constrained version of the alg/env!")
 
     run_name = args.resume_run_name if args.resume_run_name \
-        else f"{args.alg}_{args.env_id}_{"T" if args.action_type == "topology" else "R"}_{args.seed}_{args.difficulty}_{"H" if args.use_heuristic else ""}_{"I" if args.heuristic_type == "idle" else ""}_{"C1" if args.constraints_type == 1 else "C2" if args.constraints_type == 2 else ""}_{int(time())}_{np.random.randint(0, 50000)}"
+        else f"{args.alg}_{args.env_id}_{'T' if args.action_type == 'topology' else 'R'}_{args.seed}_{args.difficulty}_{'H' if args.use_heuristic else ''}_{'I' if args.heuristic_type == 'idle' else ''}_{'C1' if args.constraints_type == 1 else 'C2' if args.constraints_type == 2 else ''}_{int(time())}_{np.random.randint(0, 50000)}"
 
     # Initialize the appropriate checkpoint based on the algorithm
     if alg == 'LAGRPPO': checkpoint = LagrPPOCheckpoint(run_name, args)
@@ -75,7 +75,7 @@ def main(args: Namespace) -> None:
             
             return auxiliary_make_env(args, resume_run=checkpoint.resumed, idx=idx)[0]
             
-        envs = gym.vector.AsyncVectorEnv([lambda i=i: make_vec_subprocess(i) for i in range(args.n_envs)])
+        envs = gym.vector.SyncVectorEnv([lambda i=i: make_vec_subprocess(i) for i in range(args.n_envs)])
 
         # Run the specified algorithm
         ALGORITHMS[alg](envs, run_name, start_time, args, checkpoint)
